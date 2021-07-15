@@ -1,4 +1,4 @@
-const API = 'http://localhost:3000/tasks'
+const API = 'http://localhost:50001/tasks'
 
 export const getTasks = async () => {
     const response = await fetch(API)
