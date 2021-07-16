@@ -1,4 +1,4 @@
-const API = "http://localhost:50001/tasks";
+const API = "http://192.168.0.100:50001/tasks";
 
 export const getTasks = async () => {
   const response = await fetch(API);
@@ -13,3 +13,12 @@ export const saveTask = async (task) => {
   });
   return await response.json()
 };
+
+export const deleteTask = async (task) => {
+  const response = await fetch(API + `/${task.id}`, 
+  {
+    method: 'DELETE',
+    headers: { Accept: 'Application/json'}
+  })
+  return await response.json()
+}

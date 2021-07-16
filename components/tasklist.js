@@ -1,21 +1,46 @@
-import React from 'react'
-import { View, Text, FlatList } from 'react-native'
-import TaskItem from './TaskItem'
+import React, { useEffect, useState } from "react";
+import { FlatList, RefreshControl } from "react-native";
+import { getTasks } from "../api";
+import TaskItem from "./TaskItem";
 
-const TaskList = ({tasks}) => {
+const TaskList = () => {
+  const loadTasks = async () => {
+    const data = await getTasks();
+    setTasks(data);
+  };
 
-    const renderItem = ({item}) => {
-       return <TaskItem task={item}></TaskItem>
-    }
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await loadTasks();
+    setRefreshing(false);
+  })
 
-    return (
-        <FlatList
-        style={{width: '90%'}} 
-        data={tasks}
-        keyExtractor={(i) => i.id + ""}
-        renderItem={renderItem}>
-        </FlatList>
-    )
-}
+  const [tasks, setTasks] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-export default TaskList
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const renderItem = ({ item }) => {
+    return <TaskItem task={item}></TaskItem>;
+  };
+
+  return (
+    <FlatList
+      style={{width:'80%'}}
+      data={tasks}
+      keyExtractor={(i) => i.id + ""}
+      refreshControl={
+          <RefreshControl
+            colors={["#10843d"]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        renderItem={renderItem}
+        />
+  );
+};
+
+export default TaskList;
