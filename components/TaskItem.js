@@ -1,19 +1,19 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { deleteTask } from "../api";
+import { useNavigation } from "@react-navigation/core";
 
-const TaskItem = ({ task }) => {
-  const deleteItem = (item) => {
-    deleteTask({ id: item.id });
-  };
+const TaskItem = ({ task, handleDelete }) => {
+
+  const navigation = useNavigation()
 
   return (
     <View style={styles.itemContainer}>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate('TaskForm', {id:task.id})}>
         <Text style={styles.itemTitle}>{task.name}</Text>
         <Text style={styles.itemDescription}>{task.description}</Text>
+        <Text style={styles.itemDescription}>{task.deadline}</Text>
       </Pressable>
-      <Pressable style={styles.btnDelete} onPress={(item) => deleteItem(task)}>
+      <Pressable style={styles.btnDelete} onPress={() => handleDelete(task.id)}>
         <Text style={styles.btnText}>Delete</Text>
       </Pressable>
     </View>
