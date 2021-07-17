@@ -18,7 +18,6 @@ const LoginScreen = () => {
 
   const handleSubmit = async () => {
     const logged = await login(data)
-    console.log(' User Logged', logged)
     navigation.navigate('Home')
   }
 

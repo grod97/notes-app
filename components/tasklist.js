@@ -52,7 +52,7 @@ const TaskList = () => {
     <View>
       <TextInput style={styles.input} onChangeText={filterData}></TextInput>
       <FlatList
-        style={{ width: "90%" }}
+        style={{ width: "100%" }}
         data={filteredTasks}
         keyExtractor={(i) => i.id + ""}
         refreshControl={

@@ -2,16 +2,14 @@ const API = "http://192.168.0.100:50001/";
 let token = "";
 
 export const login = async (data) => {
-  console.log("User Data", data);
   const response = await fetch(API + "login", {
     method: "POST",
-    headers: { Accept: "application/json" , "Content-Type" : "application/json"}, 
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
   if (response.ok) {
-    let tkn = await response.json()
-    console.log(token);
-    token = tkn.token
+    let tkn = await response.json();
+    token = tkn.token;
     return true;
   }
   return false;
@@ -35,6 +33,31 @@ export const updateTask = async (task) => {
   });
   return await response.json();
 };
+
+export const UpgradeTask = async (task) => {
+  const response = await fetch(API + `tasks/upgrade/${task.id}`, {
+    method: "POST",
+    headers: {
+      Accept: "Application/json",
+      "Content-Type": "Application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await response.json()
+};
+
+export const DownTask = async (task) => {
+  const response = await fetch(API + `tasks/downgrade/${task.id}`, {
+    method: "POST",
+    headers: {
+      Accept: "Application/json",
+      "Content-Type": "Application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await response.json()
+};
+
 export const getTasks = async () => {
   const response = await fetch(API + "tasks", {
     headers: { Authorization: `Bearer ${token}` },
