@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, RefreshControl, TextInput, View, StyleSheet } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  TextInput,
+  View,
+  StyleSheet,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/core";
 import { deleteTask, getTasks } from "../api";
 import TaskItem from "./TaskItem";
@@ -8,6 +14,7 @@ const TaskList = () => {
   const loadTasks = async () => {
     const data = await getTasks();
     setTasks(data);
+    setFilterTasks(data);
   };
 
   const isFocused = useIsFocused();
@@ -19,6 +26,7 @@ const TaskList = () => {
   });
 
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilterTasks] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -35,28 +43,27 @@ const TaskList = () => {
   };
 
   const filterData = async (task) => {
-
-    const filtered = tasks.filter(t => t.name.includes(task))
-    console.log(filtered)
+    const filtered = tasks.filter((t) => t.name.includes(task) || t.description.includes(task));
+    if (task == "") setFilterTasks(tasks);
+    else setFilterTasks(filtered);
   };
 
   return (
     <View>
       <TextInput style={styles.input} onChangeText={filterData}></TextInput>
-    <FlatList
-      style={{ width: "90%" }}
-      data={tasks}
-      keyExtractor={(i) => i.id + ""}
-      refreshControl={
-        <RefreshControl
-          colors={["#10843d"]}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-      renderItem={renderItem}
-    />
-
+      <FlatList
+        style={{ width: "90%" }}
+        data={filteredTasks}
+        keyExtractor={(i) => i.id + ""}
+        refreshControl={
+          <RefreshControl
+            colors={["#10843d"]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        renderItem={renderItem}
+      />
     </View>
   );
 };
@@ -73,6 +80,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderRadius: 5,
   },
-})
+});
 
 export default TaskList;
